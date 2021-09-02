@@ -31,6 +31,20 @@ def login():
         'data': token
     }
 
+@app.route('/verifyToken', methods=["GET"])
+def verifyToken():
+    username = l.varify_token(request.headers.get('access-token'))
+    if username is None:
+        return {
+            'error': 'please login first',
+            'data': None
+        }
+    return {
+        'error': None,
+        'data': {
+            'username': username
+        }
+    }
 
 @app.route('/register', methods=["POST"])
 def register():
@@ -62,6 +76,7 @@ def logout():
             'error': 'please login first',
             'data': None
         }
+    l.clear_token(username)
     return {
         'error': None,
         'data': f'logout success: {username}'
